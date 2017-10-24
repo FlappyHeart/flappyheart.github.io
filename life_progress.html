@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+
+        <title></title>
+
+        <style media="screen">
+            .progress{
+                margin-top: 2rem;
+                font-size: 14px;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <label for="born" class="col-sm-4">周岁年龄</label>
+                <div class="col-sm-8">
+                    <input id="born" type="text" name="" value="28">
+                </div>
+            </div>
+
+            <div class="progress">
+                分钟
+                <div id="minute" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+            </div>
+
+            <div class="progress">
+                小时
+                <div id="hour" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+            </div>
+
+            <div class="progress">
+                今天
+                <div id="day" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+            </div>
+
+            <div class="progress">
+                本月
+                <div id="month" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+            </div>
+
+            <div class="progress">
+                本年
+                <div id="year" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+            </div>
+
+            <div class="progress">
+                生命
+                <div id="life" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+            </div>
+        </div>
+    </body>
+
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+    var life_max = 80;
+
+    function refresh(){
+        var oDate = new Date(); //实例一个时间对象；
+        var second = (oDate.getSeconds() / 60).toFixed(2) * 100;
+        var minute = (oDate.getMinutes() / 60).toFixed(2) * 100; //分
+        var hour = (oDate.getHours() / 24).toFixed(2) * 100; //获取系统时，
+        var day = (oDate.getDate() / daycount).toFixed(2) * 100; // 获取系统日，
+        var month = ((oDate.getMonth() + 1) / 12).toFixed(2) * 100;   //获取系统月份，由于月份是从0开始计算，所以要加1
+        // var year = oDate.getFullYear();   //获取系统的年；
+        var year = ($('#born').val() / life_max).toFixed(2) * 100;
+
+        var some_month = new Date(year,month,0);
+        var daycount = some_month.getDate();
+
+        $("#minute").css('width', second + "%");
+        $("#hour").css('width', minute + "%");
+        $("#day").css('width', hour + "%");
+        $("#month").css('width', day + "%");
+        $("#year").css('width', month + "%");
+        $("#life").css('width', year + "%");
+        console.log(second + "%")
+
+        change_color(second, 'minute');
+        change_color(minute, 'hour');
+        change_color(hour, 'day');
+        change_color(day, 'month');
+        change_color(month, 'year');
+    }
+
+    function change_color(value, selector){
+        $('#' + selector).removeClass("bg-success bg-info bg-warning bg-danger");
+        if (value < 25) {
+            $('#' + selector).addClass("bg-success");
+        }else if (value < 50) {
+            $('#' + selector).addClass("bg-info");
+        }else if (value < 75) {
+            $('#' + selector).addClass("bg-warning");
+        }else{
+            $('#' + selector).addClass("bg-danger");
+        }
+    }
+
+    $(function(){
+        setInterval("refresh()", 1000);
+     })
+    </script>
+</html>
