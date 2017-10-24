@@ -2,56 +2,76 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
 
         <title></title>
 
         <style media="screen">
-            .progress{
-                margin-top: 2rem;
-                font-size: 14px;
-                height: 100%;
-            }
         </style>
     </head>
     <body>
-        <div class="container">
+        <div class="container" style="margin-top: 20px;">
             <div class="row">
-                <label for="born" class="col-sm-4">周岁年龄</label>
-                <div class="col-sm-8">
-                    <input id="born" type="text" name="" value="28">
+                <div class="col-sm-8 input-group">
+                    <span class="input-group-addon" id="basic-addon3">周岁年龄</span>
+                    <input class="form-control" id="born" type="text" name="" value="28">
                 </div>
             </div>
 
-            <div class="progress">
-                分钟
-                <div id="minute" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-            </div>
+            <table class="table" style="margin-top: 20px;">
+              <tbody>
+                <tr>
+                  <th scope="row" style="width: 60px;">分钟</th>
+                  <td>
+                      <div class="progress">
+                          <div id="minute" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 1%"></div>
+                      </div>
+                  </td>
+                </tr>
+                <tr>
+                    <th scope="row" style="width: 60px;">小时</th>
+                    <td>
+                        <div class="progress">
+                            <div id="hour" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 1%"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" style="width: 60px;">今天</th>
+                    <td>
+                        <div class="progress">
+                            <div id="day" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 1%"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" style="width: 60px;">本月</th>
+                    <td>
+                        <div class="progress">
+                            <div id="month" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 1%"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" style="width: 60px;">今年</th>
+                    <td>
+                        <div class="progress">
+                            <div id="year" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 1%"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" style="width: 60px;">生命</th>
+                    <td>
+                        <div class="progress">
+                            <div id="life" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 1%"></div>
+                        </div>
+                    </td>
+                </tr>
+              </tbody>
+            </table>
 
-            <div class="progress">
-                小时
-                <div id="hour" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-            </div>
-
-            <div class="progress">
-                今天
-                <div id="day" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-            </div>
-
-            <div class="progress">
-                本月
-                <div id="month" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-            </div>
-
-            <div class="progress">
-                本年
-                <div id="year" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-            </div>
-
-            <div class="progress">
-                生命
-                <div id="life" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-            </div>
         </div>
     </body>
 
@@ -64,16 +84,17 @@
 
     function refresh(){
         var oDate = new Date(); //实例一个时间对象；
+        var year = ($('#born').val() / life_max).toFixed(2) * 100;
+        var month = ((oDate.getMonth() + 1) / 12).toFixed(2) * 100;   //获取系统月份，由于月份是从0开始计算，所以要加1
+
+        var some_month = new Date(oDate.getFullYear(), month,0);
+        var daycount = some_month.getDate();
+
         var second = (oDate.getSeconds() / 60).toFixed(2) * 100;
         var minute = (oDate.getMinutes() / 60).toFixed(2) * 100; //分
         var hour = (oDate.getHours() / 24).toFixed(2) * 100; //获取系统时，
         var day = (oDate.getDate() / daycount).toFixed(2) * 100; // 获取系统日，
-        var month = ((oDate.getMonth() + 1) / 12).toFixed(2) * 100;   //获取系统月份，由于月份是从0开始计算，所以要加1
         // var year = oDate.getFullYear();   //获取系统的年；
-        var year = ($('#born').val() / life_max).toFixed(2) * 100;
-
-        var some_month = new Date(year,month,0);
-        var daycount = some_month.getDate();
 
         $("#minute").css('width', second + "%");
         $("#hour").css('width', minute + "%");
@@ -81,7 +102,7 @@
         $("#month").css('width', day + "%");
         $("#year").css('width', month + "%");
         $("#life").css('width', year + "%");
-        console.log(second + "%")
+        // console.log(month + "%")
 
         change_color(second, 'minute');
         change_color(minute, 'hour');
