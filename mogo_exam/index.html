@@ -52,8 +52,8 @@
 		},
 		created(){
 			const vm = this
-			axios.get('/data1.json').then(function (response) {
-			// axios.get('https://flappyheart.github.io/mogo_exam/data1.json').then(function (response) {
+			// axios.get('/data1.json').then(function (response) {
+			axios.get('https://flappyheart.github.io/mogo_exam/data1.json').then(function (response) {
 				var list = getRandoms(response.data.length)
 
 				for (var i = 0; i < 10; i++) {
