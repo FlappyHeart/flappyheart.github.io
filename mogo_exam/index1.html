@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>魔果题库</title>
+	<link rel="stylesheet" href="https://cdn.bootcss.com/mint-ui/2.2.11/style.min.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+</head>
+<body>
+	<div id="app">
+		<mt-cell :title="'总题目数：' + total + ' 正确数：' + rightCount" v-show="submit"></mt-cell>
+
+		<div v-for="(item, index) in questions" style="margin-top: 15px;">
+			<mt-cell :title="getTitle(index)"></mt-cell>
+			<mt-radio v-if="item.answer.length == 1" v-model="answers[index]" :options="item.options">
+			</mt-radio>
+
+			<mt-checklist v-if="item.answer.length > 1" v-model="answers[index]" :options="item.options">
+			</mt-checklist>
+
+			<mt-cell :title="'正确答案：' + item.answer" v-show="submit" :style="background(answers[index], item.answer)"></mt-cell>
+			<mt-cell :title="getDescription(index)" v-show="submit" style="padding: 2px; background-color: rgb(174, 255, 164)"></mt-cell>
+		</div>
+
+		<mt-button type="primary" size="large" @click.native="finish">提交</mt-button>
+
+	</div>
+</body>
+
+<script src="https://cdn.bootcss.com/vue/2.5.9/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/vue-router/3.0.1/vue-router.min.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.17.1/axios.min.js"></script>
+<script src="https://cdn.bootcss.com/mint-ui/2.2.11/index.js"></script>
+
+<script>
+	function getRandoms(limit){
+		var original=new Array;//原始数组
+		//给原始数组original赋值
+		for (var i=0;i<limit;i++){
+			original[i]=i+1;
+		}
+		original.sort(function(){ return 0.5 - Math.random(); });
+
+		return original
+	}
+
+	var app = new Vue({
+		el: '#app',
+		data: {
+			questions: [],
+			answers: [],
+			submit: false
+		},
+		created(){
+			const vm = this
+			// axios.get('/data1.json').then(function (response) {
+			axios.get('https://flappyheart.github.io/mogo_exam/data2.json').then(function (response) {
+				var list = getRandoms(response.data.length)
+
+				for (var i = 0; i < 10; i++) {
+					vm.questions.push(response.data[list[i]])
+
+					if (vm.questions[i].answer.length > 1) {
+						vm.answers[i] = []
+					}else{
+						vm.answers[i] = -1
+					}
+				}
+			})
+		},
+		computed:{
+			rightCount: function(){
+				var count = 0
+				for (var i = 0; i < this.questions.length; i++) {
+					if (this.isCorrect(this.answers[i], this.questions[i].answer)) {
+						count++
+					}
+				}
+				return count
+			},
+			total: function(){
+				return 10
+			}
+		},
+		methods:{
+			finish(){
+				this.submit = true
+			},
+			getTitle(index){
+				// console.log(this.questions)
+				var flag = this.questions[index].answer.length > 1 ? '(多选题)' : '(单选题)';
+				return index + 1 + '.' + flag + this.questions[index].title
+			},
+			getDescription(index){
+				var desc = ""
+				if (this.questions[index].description) {
+					desc = '解析：' + this.questions[index].description
+				}else{
+					desc = '解析：无'
+				}
+				return desc
+			},
+			isCorrect(answer, correct){
+				var flag = false
+				var temp = JSON.parse(JSON.stringify(answer))
+				if (Array.isArray(temp)) {
+					var ans = temp.sort().join('')
+					flag = ans == correct
+					console.log(ans + ":" + correct)
+				}
+				return temp == correct || flag
+			},
+			background(answer, correct){
+				var flag = false
+				var temp = JSON.parse(JSON.stringify(answer))
+				if (Array.isArray(temp)) {
+					var ans = temp.sort().join('')
+					flag = ans == correct
+					console.log(ans + ":" + correct)
+				}
+
+				if (this.isCorrect(answer, correct)) {
+					return "background-color: rgb(104, 207, 245)"
+				}else{
+					return "background-color: rgb(250, 100, 67)"
+				}
+			}
+		}
+	})
+
+</script>
+</html>
